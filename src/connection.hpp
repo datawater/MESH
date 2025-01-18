@@ -29,7 +29,7 @@ class Connection {
     f32 connection_strength;  // (value from 0 to 1)
     ecc_key public_key;
 
-    Connection(): connection_strength(0.0), public_key(u256()) {}
+    Connection() : connection_strength(0.0), public_key(u256()) {}
     Connection(f32 connection_strength, ecc_key public_key)
         : connection_strength(connection_strength), public_key(public_key) {}
 
