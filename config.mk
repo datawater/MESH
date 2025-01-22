@@ -1,6 +1,6 @@
 CFLAGS_WARNINGS = -Wall -Wextra -Werror -pedantic -Wstrict-aliasing \
 				  -Wno-pointer-arith -Wno-variadic-macros -Wno-unused-command-line-argument \
-				  -Wno-reorder -Wno-deprecated-copy -Wno-implicit-fallthrough
+				  -Wno-reorder -Wno-deprecated-copy -Wno-implicit-fallthrough -Wold-style-cast
 CFLAGS = $(CFLAGS_WARNINGS) -std=c++11 -fopenmp
 LIBS =
 

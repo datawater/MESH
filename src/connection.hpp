@@ -3,24 +3,6 @@
 #include "types.hpp"
 #include "utils.hpp"
 
-typedef struct location {
-   public:
-    f32 longitude;
-    f32 latitude;
-
-    location(f32 longitude, f32 latitude)
-        : longitude(longitude), latitude(latitude) {}
-
-    MESH_DEBUG_FUNC static location random() {
-        return location(random_n<f64>(-180, 180), random_n<f64>(-90, 90));
-    }
-
-    template <class Archive>
-    void serialize(Archive& ar) {
-        ar(CEREAL_NVP(longitude), CEREAL_NVP(latitude));
-    }
-} location;
-
 typedef u8 available_connection_types_t;
 enum connection_type_e {
     CONNECITON_WIFI = 1 << 0,

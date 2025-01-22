@@ -67,8 +67,8 @@ void format_current_time(char* output);
 
 template <typename T>
 static inline T random_n(T min, T max) {
-    double scale = rand() / (double)RAND_MAX;
-    return ((double)min) + scale * (double)(max - min);
+    double scale = rand() / static_cast<double>(RAND_MAX);
+    return (static_cast<double>(min)) + scale * static_cast<double>(max - min);
 }
 
 static inline std::string random_string(size_t len) {

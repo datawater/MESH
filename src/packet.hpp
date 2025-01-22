@@ -9,6 +9,24 @@
 #include "types.hpp"
 #include "utils.hpp"
 
+typedef struct location {
+   public:
+    f32 longitude;
+    f32 latitude;
+
+    location(f32 longitude, f32 latitude)
+        : longitude(longitude), latitude(latitude) {}
+
+    MESH_DEBUG_FUNC static location random() {
+        return location(random_n<f64>(-180, 180), random_n<f64>(-90, 90));
+    }
+
+    template <class Archive>
+    void serialize(Archive& ar) {
+        ar(CEREAL_NVP(longitude), CEREAL_NVP(latitude));
+    }
+} location;
+
 typedef enum packet_types_e {
     // EACH PEER THIS PACKET TO EACHOTHER WHEN FIRST CONNECTING
     PACKET_INIT,
@@ -68,7 +86,7 @@ class InitPacket {
           ecc_public_key(ecc_public_key) {}
 
     MESH_DEBUG_FUNC static InitPacket random() {
-        return InitPacket(0, (platform_t)random_n<int>(IOS, LINUX),
+        return InitPacket(0, static_cast<platform_t>(random_n<int>(IOS, LINUX)),
                           random_string(8), u256::random());
     }
 

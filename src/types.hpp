@@ -3,7 +3,7 @@
 #include <cereal/types/vector.hpp>
 #include <cstddef>
 #include <cstdint>
-#include <vector>
+#include <unordered_map>
 
 #include "utils.hpp"
 
@@ -82,17 +82,17 @@ typedef u128 uuid;
 typedef u256 ecc_key;
 typedef char* short_str;
 
-template <typename T>
+template <typename K, typename V>
 class Matrix2d {
    public:
-    std::vector<std::vector<T>> x;
+    std::unordered_map<K, std::unordered_map<K, V>> x;
 
-    Matrix2d(std::vector<std::vector<T>> x) : x(x) {}
+    Matrix2d(std::unordered_map<K, std::unordered_map<K, V>> x) : x(x) {}
     Matrix2d() {}
 
     template <class Archive>
     void serialize(Archive& ar) {
-        ar(CEREAL_NVP(x));
+        ar(x);
     }
 };
 
