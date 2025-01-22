@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <vector>
 
+#include "utils.hpp"
+
 typedef int8_t i8;
 typedef int16_t i16;
 typedef int32_t i32;
@@ -55,6 +57,10 @@ class u128 {
     bool operator!=(const u128& o) const {
         return !(this->msb == o.msb && this->lsb == o.lsb);
     }
+
+    MESH_DEBUG_FUNC static u128 random() {
+        return u128(random_n<u64>(0, UINT64_MAX), random_n<u64>(0, UINT64_MAX));
+    }
 };
 
 class u256 {
@@ -65,6 +71,10 @@ class u256 {
     }
     bool operator!=(const u256& o) const {
         return !(this->msb == o.msb && this->lsb == o.lsb);
+    }
+
+    MESH_DEBUG_FUNC static u256 random() {
+        return u256(u128::random(), u128::random());
     }
 };
 
@@ -101,3 +111,10 @@ struct hash<u256> {
     }
 };
 }  // namespace std
+
+using unique_void_ptr = std::unique_ptr<void, void (*)(void const*)>;
+
+template <typename T>
+auto unique_void(T* ptr) -> unique_void_ptr {
+    return unique_void_ptr(ptr, [](void const* data) { UNUSED(data); });
+}

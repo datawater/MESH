@@ -1,4 +1,6 @@
-CFLAGS_WARNINGS = -Wall -Wextra -Werror -pedantic -Wstrict-aliasing -Wno-pointer-arith -Wno-variadic-macros -Wno-unused-command-line-argument -Wno-reorder -Wno-deprecated-copy
+CFLAGS_WARNINGS = -Wall -Wextra -Werror -pedantic -Wstrict-aliasing \
+				  -Wno-pointer-arith -Wno-variadic-macros -Wno-unused-command-line-argument \
+				  -Wno-reorder -Wno-deprecated-copy -Wno-implicit-fallthrough
 CFLAGS = $(CFLAGS_WARNINGS) -std=c++11 -fopenmp
 LIBS =
 
@@ -22,7 +24,7 @@ ifeq ($(LRT_IS_REQUIRED),$(GLIBC_VERSION))
 endif
 
 ifeq ($(PROFILE),debug)
-	CFLAGS += $(PROFILE_DEBUG_CFLAGS)
+	CFLAGS += $(PROFILE_DEBUG_CFLAGS) -DMESH_DEBUG
 else
 	ifeq ($(PROFILE),release)
 		CFLAGS += $(PROFILE_RELEASE_CFLAGS)

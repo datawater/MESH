@@ -4,10 +4,16 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <string>
 
 void format_current_time(char* output);
 
 #define UNUSED(x) ((void)(x))
+#ifdef MESH_DEBUG
+#define MESH_DEBUG_FUNC __attribute__((visibility("hidden")))
+#else
+#define MESH_DEBUG_FUNC
+#endif  // MESH_DEBUG
 
 #define __mesh_log_skeleton(name, args...)      \
     do {                                        \
@@ -58,3 +64,24 @@ void format_current_time(char* output);
     PRINTF_BINARY_PATTERN_INT32 PRINTF_BINARY_PATTERN_INT32
 #define PRINTF_BYTE_TO_BINARY_INT64(i) \
     PRINTF_BYTE_TO_BINARY_INT32((i) >> 32), PRINTF_BYTE_TO_BINARY_INT32(i)
+
+template <typename T>
+static inline T random_n(T min, T max) {
+    double scale = rand() / (double)RAND_MAX;
+    return ((double)min) + scale * (double)(max - min);
+}
+
+static inline std::string random_string(size_t len) {
+    static const char alphanum[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
+    std::string tmp_s;
+    tmp_s.reserve(len);
+
+    for (size_t i = 0; i < len; ++i) {
+        tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
+    }
+
+    return tmp_s;
+}

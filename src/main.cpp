@@ -18,11 +18,9 @@ int main(void) {
     InitPacket init_packet_base(av_con_types, platform, "VROOMVROOM", u256());
     UpdatePacket update_packet_base(connections_to);
 
-    Packet<InitPacket> init_packet(PACKET_INIT, uuid(), uuid(), uuid(), false,
-                                   init_packet_base);
-
-    Packet<UpdatePacket> update_packet(PACKET_UPDATE, uuid(), uuid(), uuid(),
-                                       false, update_packet_base);
+    Packet<InitPacket> init_packet = Packet<InitPacket>::random();
+    Packet<UpdatePacket> update_packet = Packet<UpdatePacket>::random();
+    Packet<MessagePacket> message_packet = Packet<MessagePacket>::random();
 
     std::stringstream ss;
 
@@ -30,6 +28,7 @@ int main(void) {
         cereal::JSONOutputArchive archive(ss);
         archive(CEREAL_NVP(init_packet));
         archive(CEREAL_NVP(update_packet));
+        archive(CEREAL_NVP(message_packet));
     }
 
     std::cout << ss.str() << "\n";
