@@ -1,4 +1,4 @@
-# MESH
+# BADEMESH
 A crossplatform ad-hoc network protocol designed for protests
 
 ## How it works
