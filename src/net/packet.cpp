@@ -1,6 +1,6 @@
 #include "packet.hpp"
 
-#include "types.hpp"
+#include "../types.hpp"
 
 template <typename T>
 MESH_DEBUG_FUNC Packet<T> Packet<T>::random() {

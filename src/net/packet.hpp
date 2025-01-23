@@ -2,12 +2,13 @@
 #include <cereal/types/string.hpp>
 #include <cereal/types/unordered_map.hpp>
 #include <cereal/types/vector.hpp>
+
 #include <string>
 #include <unordered_map>
 
 #include "connection.hpp"
-#include "types.hpp"
-#include "utils.hpp"
+#include "../types.hpp"
+#include "../utils.hpp"
 
 typedef struct location {
    public:
@@ -86,7 +87,7 @@ class InitPacket {
           ecc_public_key(ecc_public_key) {}
 
     MESH_DEBUG_FUNC static InitPacket random() {
-        return InitPacket(0, static_cast<platform_t>(random_n<int>(IOS, LINUX)),
+        return InitPacket(0, static_cast<platform_t>(random_n<int>(PLATFORM_IOS, PLATFORM_LINUX)),
                           random_string(8), u256::random());
     }
 

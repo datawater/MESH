@@ -1,7 +1,7 @@
 #pragma once
 
-#include "types.hpp"
-#include "utils.hpp"
+#include "../types.hpp"
+#include "../utils.hpp"
 
 typedef u8 available_connection_types_t;
 enum connection_type_e {
@@ -9,7 +9,7 @@ enum connection_type_e {
     CONNECTION_BLTH = 1 << 1,
 };
 
-typedef enum platform_e { IOS, ANDROID, LINUX } platform_t;
+typedef enum platform_e { PLATFORM_IOS, PLATFORM_ANDROID, PLATFORM_LINUX } platform_t;
 
 class Connection {
    public:

@@ -1,6 +1,6 @@
 include config.mk
 
-MESH_SOURCE_FILES = $(wildcard src/*.cpp)
+MESH_SOURCE_FILES = $(wildcard src/*/*.cpp) $(wildcard src/*.cpp)
 MESH_OBJECT_FILES = $(patsubst %.cpp,%.o,$(MESH_SOURCE_FILES))
 
 .PHONY: main

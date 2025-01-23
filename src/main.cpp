@@ -1,9 +1,10 @@
 #include <cereal/archives/json.hpp>
+
 #include <iostream>
 #include <unordered_map>
 
-#include "connection.hpp"
-#include "packet.hpp"
+#include "net/connection.hpp"
+#include "net/packet.hpp"
 
 int main(void) {
     available_connection_types_t av_con_types =
