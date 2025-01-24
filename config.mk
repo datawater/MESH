@@ -1,7 +1,7 @@
 CFLAGS_WARNINGS = -Wall -Wextra -Werror -pedantic -Wstrict-aliasing \
-				  -Wno-pointer-arith -Wno-variadic-macros -Wno-unused-command-line-argument \
-				  -Wno-reorder -Wno-deprecated-copy -Wno-implicit-fallthrough -Wold-style-cast
-CFLAGS = $(CFLAGS_WARNINGS) -std=c++11 -fopenmp
+				  -Wno-unused-command-line-argument -Wno-reorder -Wold-style-cast \
+				  -Wno-variadic-macros -Wno-deprecated-copy
+CFLAGS = $(CFLAGS_WARNINGS) -std=c++11
 LIBS =
 
 GLIBC_VERSION := $(shell getconf GNU_LIBC_VERSION | tail -c +7)
@@ -11,8 +11,9 @@ MOLD_EXISTS := $(shell which mold)
 
 OPT_LEVEL ?= 3
 PROFILE_DEBUG_CFLAGS := -ggdb -O0
-PROFILE_RELEASE_CFLAGS := -O$(OPT_LEVEL) -s -flto -mtune=native -march=native -fgraphite-identity
+PROFILE_RELEASE_CFLAGS := -O$(OPT_LEVEL) -s -flto -mtune=native -march=native -fgraphite-identity -D_FORTIFY_SOURCE
 PROFILE_SIZE_CFLAGS := -Oz -s
+PROFILE_CHECK_CFLAGS := -fanalyzer -fdiagnostics-path-format=separate-events -fno-diagnostics-show-caret -fno-lto -c -o /dev/null -Wno-error
 
 PROFILE ?=debug
 
@@ -28,13 +29,13 @@ ifeq ($(PROFILE),debug)
 else
 	ifeq ($(PROFILE),release)
 		CFLAGS += $(PROFILE_RELEASE_CFLAGS)
+	else ifeq ($(PROFILE),size)
+		CFLAGS += $(PROFILE_SIZE_CFLAGS)
+	else ifeq ($(PROFILE),check)
+		CFLAGS += $(PROFILE_CHECK_CFLAGS)
 	else
-		ifeq ($(PROFILE),size)
-			CFLAGS += $(PROFILE_SIZE_CFLAGS)
-		else
-			IS_ERROR =1
-			ERROR_TEXT = [ERROR] Unknown profile "$(PROFILE)".
-		endif
+		IS_ERROR =1
+		ERROR_TEXT = [ERROR] Unknown profile "$(PROFILE)".
 	endif
 endif
 
