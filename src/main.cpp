@@ -9,9 +9,6 @@ int main(void) {
     uuid uuid_to(1, 1);
     Connection con(1.0, u256(), 0);
 
-    std::unordered_map<uuid, Connection> connections_to;
-    connections_to[uuid_to] = con;
-
     InitPacket init_packet = InitPacket::random();
     UpdatePacket update_packet = UpdatePacket::random();
     MessagePacket message_packet = MessagePacket::random();

@@ -14,10 +14,10 @@ class LocalState {
     using MeshHandlingFunction =
         std::function<void(LocalState*, std::vector<u8>)>;
 
-    void add_connection(uuid uuid_a, uuid uuid_b, Connection con);
-    void remove_connection(uuid uuid_a, uuid uuid_b);
-    void delete_connection(uuid uuid_a, uuid uuid_b);
-    ConnectionGraph get_connections();
+    static void add_connection(uuid uuid_a, uuid uuid_b, const Connection& con);
+    static void remove_connection(uuid uuid_a, uuid uuid_b);
+    static void delete_connection(uuid uuid_a, uuid uuid_b);
+    ConnectionGraph const get_connections();
 
     inline void handle_event(event e, std::vector<u8> data) {
         this->event_handeling_functions[e](this, data);

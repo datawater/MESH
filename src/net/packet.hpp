@@ -39,9 +39,6 @@ class PacketBase {
 
     virtual ~PacketBase() = default;
 
-    template <class Archive>
-    void serialize(Archive& ar);
-
     MESH_DEBUG_FUNC static PacketBase* random(packet_type_t type);
 };
 
@@ -56,7 +53,7 @@ class InitPacket : PacketBase {
 
     InitPacket(uuid author, uuid to, uuid real_to, bool is_encrypted,
                available_connection_types_t av_con_types, platform_t platform,
-               std::string name, u256 ecc_public_key)
+               std::string& name, u256& ecc_public_key)
         : PacketBase(PACKET_INIT, author, to, real_to, is_encrypted),
           av_con_types(av_con_types),
           platform(platform),
@@ -64,11 +61,14 @@ class InitPacket : PacketBase {
           ecc_public_key(ecc_public_key) {}
 
     MESH_DEBUG_FUNC static InitPacket random() {
+        std::string name = random_string(8);
+        u256 key = u256::random();
+
         return InitPacket(uuid::random(), uuid::random(), uuid::random(),
                           random_n<bool>(0, 1), 0,
                           static_cast<platform_t>(
                               random_n<int>(PLATFORM_IOS, PLATFORM_LINUX)),
-                          random_string(8), u256::random());
+                          name, key);
     }
 
     template <class Archive>
@@ -84,7 +84,7 @@ class MessagePacket : PacketBase {
     std::string message;
 
     MessagePacket(uuid author, uuid to, uuid real_to, bool is_encrypted,
-                  std::string message)
+                  const std::string& message)
         : PacketBase(PACKET_MESSAGE, author, to, real_to, is_encrypted),
           message(message) {}
 
@@ -106,14 +106,16 @@ class UpdatePacket : PacketBase {
     std::unordered_map<uuid, Connection> connections_to;
 
     UpdatePacket(uuid author, uuid to, uuid real_to, bool is_encrypted,
-                 std::unordered_map<uuid, Connection> connections_to)
+                 std::unordered_map<uuid, Connection>& connections_to)
         : PacketBase(PACKET_UPDATE, author, to, real_to, is_encrypted),
           connections_to(connections_to) {}
 
     MESH_DEBUG_FUNC static UpdatePacket random() {
+        std::unordered_map<uuid, Connection> connections_to =
+            std::unordered_map<uuid, Connection>();
+
         return UpdatePacket(uuid::random(), uuid::random(), uuid::random(),
-                            random_n<bool>(0, 1),
-                            std::unordered_map<uuid, Connection>());
+                            random_n<bool>(0, 1), connections_to);
     }
 
     template <class Archive>

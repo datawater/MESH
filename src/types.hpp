@@ -32,6 +32,7 @@ typedef double f64;
         if (sizeof(T) < s / 8) {            \
             lsb = h(t);                     \
         }                                   \
+        msb = 0;                            \
     }                                       \
                                             \
     n(h msb, h lsb) : msb(msb), lsb(lsb) {} \
@@ -87,7 +88,7 @@ class Matrix2d {
    public:
     std::unordered_map<K, std::unordered_map<K, V>> x;
 
-    Matrix2d(std::unordered_map<K, std::unordered_map<K, V>> x) : x(x) {}
+    Matrix2d(std::unordered_map<K, std::unordered_map<K, V>>& x) : x(x) {}
     Matrix2d() {}
 
     template <class Archive>

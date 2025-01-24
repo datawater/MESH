@@ -1,0 +1,2 @@
+#!/bin/bash
+cppcheck --enable=all --inconclusive . --suppress=missingIncludeSystem --suppress=unusedFunction --suppress=noExplicitConstructor --suppress=initializerList

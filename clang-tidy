@@ -1,5 +1,0 @@
-#!/bin/bash
-
-set -xe
-
-find ./ -type f -name "*.hpp" -or -name "*.cpp" | xargs clang-tidy

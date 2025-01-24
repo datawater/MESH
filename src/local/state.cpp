@@ -2,7 +2,8 @@
 
 #include "../utils.hpp"
 
-void LocalState::add_connection(uuid uuid_a, uuid uuid_b, Connection con) {
+void LocalState::add_connection(uuid uuid_a, uuid uuid_b,
+                                const Connection& con) {
     UNUSED(uuid_a);
     UNUSED(uuid_b);
     UNUSED(con);
@@ -21,7 +22,7 @@ void LocalState::delete_connection(uuid uuid_a, uuid uuid_b) {
     mesh_todo("LocalState::delete_connection");
 }
 
-ConnectionGraph LocalState::get_connections() {
+const ConnectionGraph LocalState::get_connections() {
     // NOTE: Obfuscated away into a setter/getter as it may require
     // pre-processing
     return this->connections;

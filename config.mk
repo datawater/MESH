@@ -9,9 +9,9 @@ LRT_REQUIRED_VERSION := 2.17
 LRT_IS_REQUIRED := $(shell printf "%s\n" $(LRT_REQUIRED_VERSION) $(GLIBC_VERSION) | sort | head -n1)
 MOLD_EXISTS := $(shell which mold)
 
-OPT_LEVEL ?= 3
+RELEASE_OPT_LEVEL ?= 3
 PROFILE_DEBUG_CFLAGS := -ggdb -O0
-PROFILE_RELEASE_CFLAGS := -O$(OPT_LEVEL) -s -flto -mtune=native -march=native -fgraphite-identity -D_FORTIFY_SOURCE
+PROFILE_RELEASE_CFLAGS := -O$(RELEASE_OPT_LEVEL) -s -flto -mtune=native -march=native -fgraphite-identity -D_FORTIFY_SOURCE
 PROFILE_SIZE_CFLAGS := -Oz -s
 PROFILE_CHECK_CFLAGS := -fanalyzer -fdiagnostics-path-format=separate-events -fno-diagnostics-show-caret -fno-lto -c -o /dev/null -Wno-error
 
