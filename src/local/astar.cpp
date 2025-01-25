@@ -78,7 +78,7 @@ std::vector<uuid> LocalState::find_shortest_path(const uuid& start,
         closed_set.insert(current);
         open_set.pop();
 
-        for (const auto& [neighbor, connection] : connections.at(current)) {
+        for (const auto& [neighbor, connection] : connections_map.at(current)) {
             if (!connection.has_value()) continue;
             if (neighbor == current) continue;
             if (closed_set.contains(neighbor)) continue;
