@@ -4,9 +4,6 @@
 #include <cmath>
 #include <cstddef>
 #include <iostream>
-#include <limits>
-#include <queue>
-#include <unordered_map>
 
 #include "local/state.hpp"
 #include "net/connection.hpp"
@@ -46,7 +43,8 @@ int main(void) {
     }
 
     std::cerr << "digraph G {";
-    for (auto const& i : state.get_connections().x) {
+    auto connections = state.get_connections().x;
+    for (auto const& i : connections) {
         for (auto const& j : i.second) {
             if (j.second.has_value()) {
                 std::cerr << '"' << i.first << '"' << " -> \"" << j.first
@@ -62,7 +60,7 @@ int main(void) {
               << end << "\" [fillcolor=yellow style=filled];" << "}\n\0";
     std::vector<uuid> p = state.find_shortest_path(start, end, h_func);
 
-    for (auto& x : p) {
+    for (const auto& x : p) {
         std::cout << "PATH: " << x << "\n";
     }
 }

@@ -48,17 +48,17 @@ std::vector<uuid> LocalState::find_shortest_path(const uuid& start,
     std::unordered_map<uuid, uuid> came_from;
     std::unordered_set<uuid> closed_set;
 
-    auto connections = this->connections.x;
+    auto connections_map = this->connections.x;
 
-    g_score.reserve(connections.size());
-    f_score.reserve(connections.size());
-    came_from.reserve(connections.size());
-    closed_set.reserve(connections.size());
+    g_score.reserve(connections_map.size());
+    f_score.reserve(connections_map.size());
+    came_from.reserve(connections_map.size());
+    closed_set.reserve(connections_map.size());
 
     // Initialize scores
     #pragma omp parallel for
-    for (size_t i = 0; i < connections.size(); ++i) {
-        auto it = std::next(connections.begin(), i);
+    for (size_t i = 0; i < connections_map.size(); ++i) {
+        auto it = std::next(connections_map.begin(), i);
         g_score[it->first] = std::numeric_limits<f64>::infinity();
         f_score[it->first] = std::numeric_limits<f64>::infinity();
     }
@@ -68,10 +68,7 @@ std::vector<uuid> LocalState::find_shortest_path(const uuid& start,
 
     open_set.push({f_score[start], start});
 
-    u32 x;
-
     while (!open_set.empty()) {
-        x++;
         uuid current = open_set.top().second;
 
         if (current == goal) {
@@ -105,8 +102,6 @@ std::vector<uuid> LocalState::find_shortest_path(const uuid& start,
             }
         }
     }
-
-    std::cout << x << "\n";
 
     std::vector<uuid> path;
     std::unordered_set<uuid> local_visited;

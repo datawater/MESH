@@ -21,7 +21,9 @@ class LocalState {
     void remove_connection(uuid uuid_a, uuid uuid_b);
     void delete_connection(uuid uuid_a, uuid uuid_b);
     std::optional<Connection> get_connection(uuid uuid_a, uuid uuid_b);
-    ConnectionGraph const get_connections();
+    ConnectionGraph get_connections(void) const {
+        return this->connections;
+    }
 
     std::vector<uuid> find_shortest_path(const uuid& start, const uuid& goal,
                                          AstarHeuristicFunction);

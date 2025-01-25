@@ -22,9 +22,9 @@ class Matrix2d {
         ar(x);
     }
 
-    V& operator[](std::pair<K, K>& k) { return this->x[k.first][k.second]; }
+    V& operator[](const std::pair<K, K>& k) { return this->x[k.first][k.second]; }
 
-    std::unordered_map<K, V>& operator[](K& k) { return this->x[k]; }
+    std::unordered_map<K, V>& operator[](const K& k) { return this->x[k]; }
 };
 
 using unique_void_ptr = std::unique_ptr<void, void (*)(void const*)>;

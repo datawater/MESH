@@ -21,9 +21,3 @@ void LocalState::delete_connection(uuid uuid_a, uuid uuid_b) {
     this->connections[uuid_a].erase(uuid_b);
     this->connections[uuid_b].erase(uuid_a);
 }
-
-const ConnectionGraph LocalState::get_connections() {
-    // NOTE: Obfuscated away into a setter/getter as it may require
-    // pre-processing
-    return this->connections;
-}
