@@ -1,12 +1,28 @@
 #pragma once
 
-#include <cinttypes>
+#include <cstddef>
+#include <cstdint>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <format>
 
-#include "types.hpp"
 #include "utils.hpp"
+
+typedef int8_t i8;
+typedef int16_t i16;
+typedef int32_t i32;
+typedef int64_t i64;
+
+typedef uint8_t u8;
+typedef uint16_t u16;
+typedef uint32_t u32;
+typedef uint64_t u64;
+
+typedef size_t usize;
+
+typedef float f32;
+typedef double f64;
 
 #define UINT_STRUCT_IMPL(n, h, s)           \
    public:                                  \
@@ -31,7 +47,7 @@
     n& operator=(const n& o) {              \
         if (this == &o) return *this;       \
         this->msb = o.msb;                  \
-        this->lsb = lsb;                    \
+        this->lsb = o.lsb;                  \
         return *this;                       \
     }
 
@@ -50,12 +66,7 @@ class u128 {
     }
 
     friend std::ostream& operator<<(std::ostream& os, const u128& n) {
-        char* x = static_cast<char*>(malloc(sizeof(char) * 256));
-        memset(x, 0, sizeof(char) * 256);
-        std::snprintf(x, sizeof(char) * 256, "%" PRIx64 " %" PRIx64, n.msb,
-                      n.lsb);
-
-        return os << x;
+        return os << std::format("{:x}{:x}", n.msb, n.lsb);
     }
 };
 
@@ -74,7 +85,7 @@ class u256 {
     }
 
     friend std::ostream& operator<<(std::ostream& os, const u256& n) {
-        return os << n.msb << " " << n.lsb;
+        return os << n.msb << n.lsb;
     }
 };
 

@@ -14,12 +14,17 @@ class LocalState {
    public:
     using MeshHandlingFunction =
         std::function<void(LocalState*, std::vector<u8>)>;
+    using AstarHeuristicFunction =
+        std::function<u16(LocalState*, const uuid&, const uuid&)>;
 
     void add_connection(uuid uuid_a, uuid uuid_b, const Connection& con);
     void remove_connection(uuid uuid_a, uuid uuid_b);
     void delete_connection(uuid uuid_a, uuid uuid_b);
     std::optional<Connection> get_connection(uuid uuid_a, uuid uuid_b);
     ConnectionGraph const get_connections();
+
+    std::vector<uuid> find_shortest_path(const uuid& start, const uuid& goal,
+                                         AstarHeuristicFunction);
 
     inline void handle_event(event e, std::vector<u8> data) {
         this->event_handeling_functions[e](this, data);

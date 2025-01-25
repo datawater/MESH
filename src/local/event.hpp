@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../utils/types.hpp"
-
 typedef enum even_e {
     EVENT_MESSAGE_RECIEVED_FINAL,
     EVENT_MESSAGE_RECIEVED_TO_TRANSFER,
@@ -16,9 +14,3 @@ typedef enum even_e {
     EVENT_CONNECTION_DETAILS_WIFI_DIRECT_SEND,
     EVENT_CONNECTION_DETAILS_WIFI_DIRECT_RECIEVE,
 } event;
-
-class GeneralEvent {
-   public:
-    uuid from;
-    uuid to;
-};

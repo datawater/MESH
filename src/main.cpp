@@ -1,44 +1,68 @@
+#include <omp.h>
+
 #include <cereal/archives/json.hpp>
+#include <cmath>
+#include <cstddef>
 #include <iostream>
-#include <ranges>
+#include <limits>
+#include <queue>
+#include <unordered_map>
 
 #include "local/state.hpp"
 #include "net/connection.hpp"
 #include "net/packet.hpp"
+#include "utils/types.hpp"
+#include "utils/utils.hpp"
+
+#define N_CONS 16
+
+uint16_t h_func(LocalState* s, uuid start, uuid end) {
+    UNUSED(s);
+    UNUSED(start);
+    UNUSED(end);
+
+    return 0;
+}
 
 int main(void) {
-    uuid uuid_to(1, 1);
-    Connection con(1.0, u256(), 0);
+    srand(time(NULL));
 
-    InitPacket init_packet = InitPacket::random();
-    UpdatePacket update_packet = UpdatePacket::random();
-    MessagePacket message_packet = MessagePacket::random();
+    uuid uuids[N_CONS];
 
-    LocalState state;
-    for (const int i : std::views::iota(0, 10)) {
-        UNUSED(i);
-        state.add_connection(uuid::random(), uuid::random(),
-                             Connection::random());
+    // #pragma omp parallel
+    for (int i = 0; i < N_CONS; i++) {
+        uuids[i] = uuid::random();
     }
 
+    LocalState state;
+    for (const uuid& x : uuids) {
+        for (int i = 0; i < (N_CONS >> 4) + 1; i++) {
+            uuid uuid = x;
+
+            while (uuid == x) uuid = uuids[random_n<size_t>(0, N_CONS)];
+
+            state.add_connection(x, uuid, Connection::random());
+        }
+    }
+
+    std::cerr << "digraph G {";
     for (auto const& i : state.get_connections().x) {
         for (auto const& j : i.second) {
             if (j.second.has_value()) {
-                std::cout << j.first << " " << j.second.value() << std::endl;
-            } else {
-                std::cout << j.first << " " << "None" << std::endl;
+                std::cerr << '"' << i.first << '"' << " -> \"" << j.first
+                          << "\";" << std::endl;
             }
         }
     }
 
-    std::stringstream ss;
+    uuid start = uuids[random_n<size_t>(0, N_CONS)];
+    uuid end = uuids[random_n<size_t>(0, N_CONS)];
 
-    {
-        cereal::JSONOutputArchive archive(ss);
-        archive(CEREAL_NVP(init_packet));
-        archive(CEREAL_NVP(update_packet));
-        archive(CEREAL_NVP(message_packet));
+    std::cerr << '"' << start << "\" [fillcolor=pink  , style=filled]; \""
+              << end << "\" [fillcolor=yellow style=filled];" << "}\n\0";
+    std::vector<uuid> p = state.find_shortest_path(start, end, h_func);
+
+    for (auto& x : p) {
+        std::cout << "PATH: " << x << "\n";
     }
-
-    std::cout << ss.str() << "\n";
 }

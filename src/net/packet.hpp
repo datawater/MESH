@@ -102,13 +102,12 @@ class MessagePacket : PacketBase {
 
 class UpdatePacket : PacketBase {
    public:
-    // Maybe introduce a diff based approach
-    std::unordered_map<uuid, Connection> connections_to;
+    std::unordered_map<uuid, Connection> connections_diff;
 
     UpdatePacket(uuid author, uuid to, uuid real_to, bool is_encrypted,
-                 std::unordered_map<uuid, Connection>& connections_to)
+                 std::unordered_map<uuid, Connection>& connections_diff)
         : PacketBase(PACKET_UPDATE, author, to, real_to, is_encrypted),
-          connections_to(connections_to) {}
+          connections_diff(connections_diff) {}
 
     MESH_DEBUG_FUNC static UpdatePacket random() {
         std::unordered_map<uuid, Connection> connections_to =
@@ -121,7 +120,7 @@ class UpdatePacket : PacketBase {
     template <class Archive>
     void serialize(Archive& ar) {
         ar(CEREAL_NVP(author), CEREAL_NVP(to), CEREAL_NVP(real_to),
-           CEREAL_NVP(is_encrypted), CEREAL_NVP(connections_to));
+           CEREAL_NVP(is_encrypted), CEREAL_NVP(connections_diff));
     }
 };
 

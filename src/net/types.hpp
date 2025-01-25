@@ -1,5 +1,7 @@
 #pragma once
 
+#include <format>
+
 #include "../utils/types.hpp"
 
 typedef u8 available_connection_types_t;
@@ -8,6 +10,8 @@ enum connection_type_e {
     CONNECITON_WIFI_DIRECT_CLIENT = 1 << 1,
     CONNECTION_BLE = 1 << 2,
     CONNECTION_BLTH_5 = 1 << 3,
+    CONNECTION_UWB = 1 << 4,
+    CONNECTION_NFC = 1 << 5
 };
 
 typedef enum platform_e {
@@ -31,6 +35,10 @@ typedef struct location {
     template <class Archive>
     void serialize(Archive& ar) {
         ar(CEREAL_NVP(longitude), CEREAL_NVP(latitude));
+    }
+
+    std::string to_string() {
+        return std::format("{}, {}", this->latitude, this->latitude);
     }
 } location;
 

@@ -29,11 +29,16 @@ class Connection {
     }
 
     friend std::ostream& operator<<(std::ostream& os, const Connection& c) {
-        return os << "{"
-                  << "\n    connection_strength: " << c.connection_strength
-                  << "."
-                  << "\n    public_key: " << c.public_key << ","
-                  << "\n    mac: " << c.mac << "\n"
-                  << "}";
+        return os << std::format(
+                   "{{\n    connection_strength: {},"
+                   "\n    public_key: {:x}{:x}{:x}{:x},"
+                   "\n    mac: {:X}:{:X}:{:X}:{:X}\n}}",
+                   c.connection_strength, c.public_key.msb.msb,
+                   c.public_key.msb.lsb, c.public_key.lsb.msb,
+                   c.public_key.lsb.lsb,
+                   static_cast<u16>((c.mac >> 48) & 0xFFFF),
+                   static_cast<u16>((c.mac >> 32) & 0xFFFF),
+                   static_cast<u16>((c.mac >> 16) & 0xFFFF),
+                   static_cast<u16>((c.mac & 0xFFFF)));
     }
 };

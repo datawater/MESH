@@ -1,32 +1,13 @@
 #pragma once
 
 #include <cereal/types/vector.hpp>
-#include <cstddef>
-#include <cstdint>
 #include <unordered_map>
 
-#include "utils.hpp"
-
-typedef int8_t i8;
-typedef int16_t i16;
-typedef int32_t i32;
-typedef int64_t i64;
-
-typedef uint8_t u8;
-typedef uint16_t u16;
-typedef uint32_t u32;
-typedef uint64_t u64;
-
-typedef size_t usize;
-
-typedef float f32;
-typedef double f64;
-
 #include "int.hpp"
+#include "utils.hpp"
 
 typedef u128 uuid;
 typedef u256 ecc_key;
-typedef char* short_str;
 
 template <typename K, typename V>
 class Matrix2d {
