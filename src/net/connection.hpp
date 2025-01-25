@@ -2,8 +2,8 @@
 
 #include <cstdint>
 
-#include "../types.hpp"
-#include "../utils.hpp"
+#include "../utils/types.hpp"
+#include "../utils/utils.hpp"
 #include "types.hpp"
 
 class Connection {
@@ -26,5 +26,14 @@ class Connection {
     template <class Archive>
     void serialize(Archive& ar) {
         ar(CEREAL_NVP(connection_strength), CEREAL_NVP(public_key));
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Connection& c) {
+        return os << "{"
+                  << "\n    connection_strength: " << c.connection_strength
+                  << "."
+                  << "\n    public_key: " << c.public_key << ","
+                  << "\n    mac: " << c.mac << "\n"
+                  << "}";
     }
 };

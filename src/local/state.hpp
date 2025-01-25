@@ -1,22 +1,24 @@
 #pragma once
 
 #include <functional>
+#include <optional>
 #include <unordered_map>
 
 #include "../net/connection.hpp"
-#include "../types.hpp"
+#include "../utils/types.hpp"
 #include "event.hpp"
 
-using ConnectionGraph = Matrix2d<uuid, Connection>;
+using ConnectionGraph = Matrix2d<uuid, std::optional<Connection>>;
 
 class LocalState {
    public:
     using MeshHandlingFunction =
         std::function<void(LocalState*, std::vector<u8>)>;
 
-    static void add_connection(uuid uuid_a, uuid uuid_b, const Connection& con);
-    static void remove_connection(uuid uuid_a, uuid uuid_b);
-    static void delete_connection(uuid uuid_a, uuid uuid_b);
+    void add_connection(uuid uuid_a, uuid uuid_b, const Connection& con);
+    void remove_connection(uuid uuid_a, uuid uuid_b);
+    void delete_connection(uuid uuid_a, uuid uuid_b);
+    std::optional<Connection> get_connection(uuid uuid_a, uuid uuid_b);
     ConnectionGraph const get_connections();
 
     inline void handle_event(event e, std::vector<u8> data) {
@@ -28,7 +30,7 @@ class LocalState {
         this->event_handeling_functions[e] = function_ptr;
     }
 
-    LocalState();
+    LocalState() {};
 
    private:
     ConnectionGraph connections;

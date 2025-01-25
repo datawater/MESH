@@ -1,7 +1,7 @@
 CFLAGS_WARNINGS = -Wall -Wextra -Werror -pedantic -Wstrict-aliasing \
 				  -Wno-unused-command-line-argument -Wno-reorder -Wold-style-cast \
 				  -Wno-variadic-macros -Wno-deprecated-copy
-CFLAGS = $(CFLAGS_WARNINGS) -std=c++11
+CFLAGS = $(CFLAGS_WARNINGS) -std=c++20 -Isrc/
 LIBS =
 
 GLIBC_VERSION := $(shell getconf GNU_LIBC_VERSION | tail -c +7)

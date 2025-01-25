@@ -1,25 +1,22 @@
 #include "state.hpp"
 
-#include "../utils.hpp"
+#include <unordered_map>
+
+#include "../utils/utils.hpp"
 
 void LocalState::add_connection(uuid uuid_a, uuid uuid_b,
                                 const Connection& con) {
-    UNUSED(uuid_a);
-    UNUSED(uuid_b);
-    UNUSED(con);
-    mesh_todo("LocalState::add_connection");
+    this->connections.x.insert(std::make_pair(
+        uuid_a, std::unordered_map<uuid, std::optional<Connection>>()));
+    this->connections[uuid_a].insert_or_assign(uuid_b, std::optional(con));
 }
 
 void LocalState::remove_connection(uuid uuid_a, uuid uuid_b) {
-    UNUSED(uuid_a);
-    UNUSED(uuid_b);
-    mesh_todo("LocalState::remove_connection");
+    this->connections[uuid_a][uuid_b] = std::nullopt;
 }
 
 void LocalState::delete_connection(uuid uuid_a, uuid uuid_b) {
-    UNUSED(uuid_a);
-    UNUSED(uuid_b);
-    mesh_todo("LocalState::delete_connection");
+    this->connections[uuid_a].erase(uuid_b);
 }
 
 const ConnectionGraph LocalState::get_connections() {

@@ -1,7 +1,8 @@
 #include <cereal/archives/json.hpp>
 #include <iostream>
-#include <unordered_map>
+#include <ranges>
 
+#include "local/state.hpp"
 #include "net/connection.hpp"
 #include "net/packet.hpp"
 
@@ -12,6 +13,23 @@ int main(void) {
     InitPacket init_packet = InitPacket::random();
     UpdatePacket update_packet = UpdatePacket::random();
     MessagePacket message_packet = MessagePacket::random();
+
+    LocalState state;
+    for (const int i : std::views::iota(0, 10)) {
+        UNUSED(i);
+        state.add_connection(uuid::random(), uuid::random(),
+                             Connection::random());
+    }
+
+    for (auto const& i : state.get_connections().x) {
+        for (auto const& j : i.second) {
+            if (j.second.has_value()) {
+                std::cout << j.first << " " << j.second.value() << std::endl;
+            } else {
+                std::cout << j.first << " " << "None" << std::endl;
+            }
+        }
+    }
 
     std::stringstream ss;
 

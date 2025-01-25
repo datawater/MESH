@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../types.hpp"
+#include "../utils/types.hpp"
 
 typedef u8 available_connection_types_t;
 enum connection_type_e {

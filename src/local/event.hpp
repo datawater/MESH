@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../types.hpp"
+#include "../utils/types.hpp"
 
 typedef enum even_e {
     EVENT_MESSAGE_RECIEVED_FINAL,

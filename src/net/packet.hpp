@@ -5,8 +5,8 @@
 #include <string>
 #include <unordered_map>
 
-#include "../types.hpp"
-#include "../utils.hpp"
+#include "../utils/types.hpp"
+#include "../utils/utils.hpp"
 #include "connection.hpp"
 #include "types.hpp"
 

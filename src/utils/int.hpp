@@ -1,26 +1,12 @@
 #pragma once
 
-#include <cereal/types/vector.hpp>
-#include <cstddef>
-#include <cstdint>
-#include <unordered_map>
+#include <cinttypes>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
+#include "types.hpp"
 #include "utils.hpp"
-
-typedef int8_t i8;
-typedef int16_t i16;
-typedef int32_t i32;
-typedef int64_t i64;
-
-typedef uint8_t u8;
-typedef uint16_t u16;
-typedef uint32_t u32;
-typedef uint64_t u64;
-
-typedef size_t usize;
-
-typedef float f32;
-typedef double f64;
 
 #define UINT_STRUCT_IMPL(n, h, s)           \
    public:                                  \
@@ -62,6 +48,15 @@ class u128 {
     MESH_DEBUG_FUNC static u128 random() {
         return u128(random_n<u64>(0, UINT64_MAX), random_n<u64>(0, UINT64_MAX));
     }
+
+    friend std::ostream& operator<<(std::ostream& os, const u128& n) {
+        char* x = static_cast<char*>(malloc(sizeof(char) * 256));
+        memset(x, 0, sizeof(char) * 256);
+        std::snprintf(x, sizeof(char) * 256, "%" PRIx64 " %" PRIx64, n.msb,
+                      n.lsb);
+
+        return os << x;
+    }
 };
 
 class u256 {
@@ -77,23 +72,9 @@ class u256 {
     MESH_DEBUG_FUNC static u256 random() {
         return u256(u128::random(), u128::random());
     }
-};
 
-typedef u128 uuid;
-typedef u256 ecc_key;
-typedef char* short_str;
-
-template <typename K, typename V>
-class Matrix2d {
-   public:
-    std::unordered_map<K, std::unordered_map<K, V>> x;
-
-    Matrix2d(std::unordered_map<K, std::unordered_map<K, V>>& x) : x(x) {}
-    Matrix2d() {}
-
-    template <class Archive>
-    void serialize(Archive& ar) {
-        ar(x);
+    friend std::ostream& operator<<(std::ostream& os, const u256& n) {
+        return os << n.msb << " " << n.lsb;
     }
 };
 
@@ -112,10 +93,3 @@ struct hash<u256> {
     }
 };
 }  // namespace std
-
-using unique_void_ptr = std::unique_ptr<void, void (*)(void const*)>;
-
-template <typename T>
-auto unique_void(T* ptr) -> unique_void_ptr {
-    return unique_void_ptr(ptr, [](void const* data) { UNUSED(data); });
-}
