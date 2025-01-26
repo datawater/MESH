@@ -1,35 +1,13 @@
-include config.mk
+.PHONY: main clean
 
-MESH_SOURCE_FILES = $(wildcard src/*/*.cpp) $(wildcard src/*.cpp)
-MESH_OBJECT_FILES = $(patsubst %.cpp,%.o,$(MESH_SOURCE_FILES))
+PROFILE ?= debug
+THREADS ?=
+CMAKE_FLAGS ?=
 
-.PHONY: main
-main: check_error mesh
+main:
+	@-mkdir build
+	cmake . -Bbuild -DPROFILE=$(PROFILE) $(CMAKE_FLAGS)
+	make -C build -j$(THREADS)
 
-mesh: $(MESH_OBJECT_FILES)
-	$(CXX) $(CFLAGS) $^ -o $@ $(LIBS)
-
-libmesh.a: $(MESH_OBJECT_FILES)
-	ar -crs $@ $^
-	
-src/%.o: src/%.cpp
-	$(CXX) $(CFLAGS) -c $< -o $@
-
-# workshy:
-# 	make -C ./src/workshy
-
-.PHONY: check_error
-check_error:
-ifeq ($(IS_ERROR),1)
-	$(info $(ERROR_TEXT))
-else
-endif
-
-.PHONY: clean
 clean:
-	-find . -type f -name "*.o" -delete
-	-rm mesh
-	-rm *.a
-
-	# -make -C ./src/workshy clean
-	-make -C ./src/tests clean
+	rm -fdr build
