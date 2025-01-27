@@ -9,6 +9,14 @@
 void format_current_time(char* output);
 
 #define UNUSED(x) ((void)(x))
+
+#ifdef WIN32
+#define MESH_EXPORT __declspec(dllexport)
+#else
+#define MESH_EXPORT \
+    extern "C" __attribute__((visibility("default"))) __attribute__((used))
+#endif  // WIN32
+
 #ifdef MESH_DEBUG
 #define MESH_DEBUG_FUNC __attribute__((visibility("hidden")))
 #else

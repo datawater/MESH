@@ -1,8 +1,10 @@
 #include <omp.h>
 
 #include <algorithm>
+#include <cmath>
 #include <functional>
 #include <limits>
+#include <numbers>
 #include <queue>
 #include <unordered_map>
 #include <vector>
@@ -55,8 +57,8 @@ std::vector<uuid> LocalState::find_shortest_path(const uuid& start,
     came_from.reserve(connections_map.size());
     closed_set.reserve(connections_map.size());
 
-    // Initialize scores
-    #pragma omp parallel for
+// Initialize scores
+#pragma omp parallel for
     for (size_t i = 0; i < connections_map.size(); ++i) {
         auto it = std::next(connections_map.begin(), i);
         g_score[it->first] = std::numeric_limits<f64>::infinity();
@@ -79,12 +81,12 @@ std::vector<uuid> LocalState::find_shortest_path(const uuid& start,
         open_set.pop();
 
         for (const auto& [neighbor, connection] : connections_map.at(current)) {
-            if (!connection.has_value()) continue;
             if (neighbor == current) continue;
             if (closed_set.contains(neighbor)) continue;
 
+            const f64 n = 10.0;
             f64 tentative_g_score =
-                g_score[current] + (-connection->connection_strength);
+                g_score[current] + (n * std::pow(std::numbers::e, -connection->connection_strength));
 
             if (tentative_g_score >= g_score[neighbor]) continue;
 

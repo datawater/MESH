@@ -46,10 +46,8 @@ int main(void) {
     auto connections = state.get_connections().x;
     for (auto const& i : connections) {
         for (auto const& j : i.second) {
-            if (j.second.has_value()) {
-                std::cerr << '"' << i.first << '"' << " -> \"" << j.first
-                          << "\";" << std::endl;
-            }
+            std::cerr << '"' << i.first << '"' << " -> \"" << j.first << "\";"
+                      << std::endl;
         }
     }
 
@@ -63,4 +61,6 @@ int main(void) {
     for (const auto& x : p) {
         std::cout << "PATH: " << x << "\n";
     }
+
+    return 0;
 }

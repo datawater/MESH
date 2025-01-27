@@ -1,14 +1,14 @@
 #pragma once
 
 #include <functional>
-#include <optional>
 #include <unordered_map>
+#include <memory>
 
 #include "../net/connection.hpp"
 #include "../utils/types.hpp"
 #include "event.hpp"
 
-using ConnectionGraph = Matrix2d<uuid, std::optional<Connection>>;
+using ConnectionGraph = Matrix2d<uuid, std::shared_ptr<Connection>>;
 
 class LocalState {
    public:
@@ -18,12 +18,9 @@ class LocalState {
         std::function<u16(LocalState*, const uuid&, const uuid&)>;
 
     void add_connection(uuid uuid_a, uuid uuid_b, const Connection& con);
-    void remove_connection(uuid uuid_a, uuid uuid_b);
     void delete_connection(uuid uuid_a, uuid uuid_b);
-    std::optional<Connection> get_connection(uuid uuid_a, uuid uuid_b);
-    ConnectionGraph get_connections(void) const {
-        return this->connections;
-    }
+
+    ConnectionGraph get_connections(void) const { return this->connections; }
 
     std::vector<uuid> find_shortest_path(const uuid& start, const uuid& goal,
                                          AstarHeuristicFunction);

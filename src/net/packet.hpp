@@ -2,6 +2,7 @@
 #include <cereal/types/string.hpp>
 #include <cereal/types/unordered_map.hpp>
 #include <cereal/types/vector.hpp>
+#include <memory>
 #include <string>
 #include <unordered_map>
 
@@ -11,6 +12,8 @@
 #include "types.hpp"
 
 typedef enum packet_types_e {
+    PACKET_EMPTY,
+
     // EACH PEER THIS PACKET TO EACHOTHER WHEN FIRST CONNECTING
     PACKET_INIT,
     // SHORT STRING MESSAGE, NO MORE THAN 256 BYTES
@@ -18,7 +21,7 @@ typedef enum packet_types_e {
     // UPDATE SEND EVERY N SECONDS. SENT TO EACH CONNECTED DEVICE
     PACKET_UPDATE,
     // PACKET THAT SAYS THIS DEVICE NEEDS HELP. IS UNENCRYPTED
-    PACKET_BROADCAST_HELP,
+    PACKET_BROADCAST_HELP
 } packet_type_t;
 
 class PacketBase {
@@ -37,6 +40,12 @@ class PacketBase {
           real_to(real_to),
           is_encrypted(is_encrypted) {}
 
+    PacketBase()
+        : type(PACKET_EMPTY),
+          author(u128()),
+          to(u128()),
+          real_to(u128()),
+          is_encrypted(false) {};
     virtual ~PacketBase() = default;
 
     MESH_DEBUG_FUNC static PacketBase* random(packet_type_t type);
@@ -51,9 +60,14 @@ class InitPacket : PacketBase {
 
     u256 ecc_public_key;
 
+    InitPacket()
+        : av_con_types(0),
+          platform(PLATFORM_NONE),
+          name(std::string()),
+          ecc_public_key(u256()) {}
     InitPacket(uuid author, uuid to, uuid real_to, bool is_encrypted,
                available_connection_types_t av_con_types, platform_t platform,
-               std::string& name, u256& ecc_public_key)
+               std::string& name, const u256& ecc_public_key)
         : PacketBase(PACKET_INIT, author, to, real_to, is_encrypted),
           av_con_types(av_con_types),
           platform(platform),
@@ -83,6 +97,8 @@ class MessagePacket : PacketBase {
    public:
     std::string message;
 
+    MessagePacket() : message(std::string()) {}
+
     MessagePacket(uuid author, uuid to, uuid real_to, bool is_encrypted,
                   const std::string& message)
         : PacketBase(PACKET_MESSAGE, author, to, real_to, is_encrypted),
@@ -102,16 +118,18 @@ class MessagePacket : PacketBase {
 
 class UpdatePacket : PacketBase {
    public:
-    std::unordered_map<uuid, Connection> connections_diff;
+    std::unordered_map<uuid, std::shared_ptr<Connection>> connections_diff;
+
+    UpdatePacket() : connections_diff(std::unordered_map<uuid, std::shared_ptr<Connection>>()) {}
 
     UpdatePacket(uuid author, uuid to, uuid real_to, bool is_encrypted,
-                 std::unordered_map<uuid, Connection>& connections_diff)
+                 std::unordered_map<uuid, std::shared_ptr<Connection>>& connections_diff)
         : PacketBase(PACKET_UPDATE, author, to, real_to, is_encrypted),
           connections_diff(connections_diff) {}
 
     MESH_DEBUG_FUNC static UpdatePacket random() {
-        std::unordered_map<uuid, Connection> connections_to =
-            std::unordered_map<uuid, Connection>();
+        std::unordered_map<uuid, std::shared_ptr<Connection>> connections_to =
+            std::unordered_map<uuid, std::shared_ptr<Connection>>();
 
         return UpdatePacket(uuid::random(), uuid::random(), uuid::random(),
                             random_n<bool>(0, 1), connections_to);
@@ -129,6 +147,8 @@ class BroadcastHelpPacket : PacketBase {
     std::string message;
     location location_now;
 
+    BroadcastHelpPacket()
+        : message(std::string()), location_now(location(0.0, 0.0)) {}
     BroadcastHelpPacket(uuid author, uuid to, uuid real_to, bool is_encrypted,
                         std::string message, location location_now)
         : PacketBase(PACKET_BROADCAST_HELP, author, to, real_to, is_encrypted),

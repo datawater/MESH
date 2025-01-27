@@ -3,7 +3,7 @@
 from os import system
 
 def main():
-    system("./mesh 2> mesh.dot")
+    system("./build/main 2> mesh.dot")
     system("dot -Tpng mesh.dot -o mesh.png")
     system("feh mesh.png &")
 

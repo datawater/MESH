@@ -22,7 +22,9 @@ class Matrix2d {
         ar(x);
     }
 
-    V& operator[](const std::pair<K, K>& k) { return this->x[k.first][k.second]; }
+    V& operator[](const std::pair<K, K>& k) {
+        return this->x[k.first][k.second];
+    }
 
     std::unordered_map<K, V>& operator[](const K& k) { return this->x[k]; }
 };

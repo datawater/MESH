@@ -17,7 +17,8 @@ enum connection_type_e {
 typedef enum platform_e {
     PLATFORM_IOS,
     PLATFORM_ANDROID,
-    PLATFORM_LINUX
+    PLATFORM_LINUX,
+    PLATFORM_NONE
 } platform_t;
 
 typedef struct location {

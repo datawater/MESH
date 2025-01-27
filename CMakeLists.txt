@@ -44,7 +44,7 @@ elseif ("${PROFILE}" STREQUAL "size")
     add_compile_options(-Oz -s)
 elseif ("${PROFILE}" STREQUAL "check")
     add_compile_options(-fanalyzer -fdiagnostics-path-format=separate-events
-                        -fno-diagnostics-show-caret -fno-lto)
+                        -fno-diagnostics-show-caret -fno-lto -Wno-error)
 else()
     message(FATAL_ERROR "Unknown profile '${PROFILE}'. Use debug, release, size, or check.")
 endif()
