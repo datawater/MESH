@@ -129,14 +129,14 @@ MESH_EXPORT UpdatePacket* UpdatePacket_FromLocalState(u64 author[2], u64 to[2],
                                                       u64 real_to[2],
                                                       bool is_encrypted,
                                                       LocalState* state) {
-    return new UpdatePacket(
-        U128(author), U128(to), U128(real_to), is_encrypted,
-        state->get_connections()[U128(author)]);
+    return new UpdatePacket(U128(author), U128(to), U128(real_to), is_encrypted,
+                            state->get_connections()[U128(author)]);
 }
 
 MESH_EXPORT UpdatePacket* UpdatePacket_Random() {
     auto x = std::unordered_map<uuid, std::shared_ptr<Connection>>();
-    return new UpdatePacket(uuid::random(), uuid::random(), uuid::random(), random_n<bool>(0, 1), x);
+    return new UpdatePacket(uuid::random(), uuid::random(), uuid::random(),
+                            random_n<bool>(0, 1), x);
 }
 
 MESH_EXPORT const char* UpdatePacket_ToBinary(UpdatePacket* pak) {
@@ -156,12 +156,16 @@ MESH_EXPORT BroadcastHelpPacket* BroadcastHelpPacket_Default() {
 MESH_EXPORT BroadcastHelpPacket* BroadcastHelpPacket_FromLocalState(
     u64 author[2], u64 to[2], u64 real_to[2], bool is_encrypted,
     const char* message, f64 location_now[2]) {
-    
-    return new BroadcastHelpPacket(U128(author), U128(to), U128(real_to), is_encrypted, std::string(message), location(location_now[0], location_now[1]));
+    return new BroadcastHelpPacket(U128(author), U128(to), U128(real_to),
+                                   is_encrypted, std::string(message),
+                                   location(location_now[0], location_now[1]));
 }
 
 MESH_EXPORT BroadcastHelpPacket* BroadcastHelpPacket_Random() {
-    return new BroadcastHelpPacket(uuid::random(), uuid::random(), uuid::random(), random_n<bool>(0, 1), std::string(), location(random_n<f64>(-90, 90), random_n<f64>(-180, 180)));
+    return new BroadcastHelpPacket(
+        uuid::random(), uuid::random(), uuid::random(), random_n<bool>(0, 1),
+        std::string(),
+        location(random_n<f64>(-90, 90), random_n<f64>(-180, 180)));
 }
 
 MESH_EXPORT const char* BroadcastHelpPacket_ToBinary(BroadcastHelpPacket* pak) {

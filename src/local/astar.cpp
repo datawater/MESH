@@ -86,7 +86,9 @@ std::vector<uuid> LocalState::find_shortest_path(const uuid& start,
 
             const f64 n = 10.0;
             f64 tentative_g_score =
-                g_score[current] + (n * std::pow(std::numbers::e, -connection->connection_strength));
+                g_score[current] +
+                (n *
+                 std::pow(std::numbers::e, -connection->connection_strength));
 
             if (tentative_g_score >= g_score[neighbor]) continue;
 

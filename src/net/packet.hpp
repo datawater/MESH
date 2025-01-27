@@ -120,10 +120,13 @@ class UpdatePacket : PacketBase {
    public:
     std::unordered_map<uuid, std::shared_ptr<Connection>> connections_diff;
 
-    UpdatePacket() : connections_diff(std::unordered_map<uuid, std::shared_ptr<Connection>>()) {}
+    UpdatePacket()
+        : connections_diff(
+              std::unordered_map<uuid, std::shared_ptr<Connection>>()) {}
 
-    UpdatePacket(uuid author, uuid to, uuid real_to, bool is_encrypted,
-                 std::unordered_map<uuid, std::shared_ptr<Connection>>& connections_diff)
+    UpdatePacket(
+        uuid author, uuid to, uuid real_to, bool is_encrypted,
+        std::unordered_map<uuid, std::shared_ptr<Connection>>& connections_diff)
         : PacketBase(PACKET_UPDATE, author, to, real_to, is_encrypted),
           connections_diff(connections_diff) {}
 
